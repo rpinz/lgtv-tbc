@@ -1,0 +1,99 @@
+# OpenSSL server configuration file.
+# https://jamielinux.com/docs/openssl-certificate-authority/appendix/intermediate-configuration-file.html
+
+[ ca ]
+# `man ca`
+default_ca = CA_default
+
+[ CA_default ]
+prompt            = no
+dir               = /build/intermediate
+certs             = $dir/certs
+crl_dir           = $dir/crl
+new_certs_dir     = $dir/newcerts
+database          = $dir/index.txt
+serial            = $dir/serial
+RANDFILE          = $dir/private/.rand
+
+# The root key and root certificate.
+private_key       = $dir/private/intermediate.key.pem
+certificate       = $dir/certs/intermediate.cert.pem
+
+# SHA-1 is deprecated, so use SHA-2 instead.
+default_md        = sha256
+
+name_opt          = ca_default
+cert_opt          = ca_default
+default_days      = 3650
+preserve          = no
+policy            = policy_loose
+copy_extensions   = copy
+
+[ policy_loose ]
+# Allow the intermediate CA to sign a more diverse range of certificates.
+# See the POLICY FORMAT section of the `ca` man page.
+countryName             = optional
+organizationName        = optional
+commonName              = supplied
+
+[ req ]
+# Options for the `req` tool (`man req`).
+default_bits        = 2048
+distinguished_name  = req_distinguished_name
+string_mask         = utf8only
+req_extensions      = req_ext
+
+# SHA-1 is deprecated, so use SHA-2 instead.
+default_md          = sha256
+
+# Extension to add when the -x509 option is used.
+x509_extensions     = v3_ca
+
+[ req_distinguished_name ]
+# See <https://en.wikipedia.org/wiki/Certificate_signing_request>.
+commonName                      = Common Name
+
+# Optionally, specify some defaults.
+commonName_default              = lgtvsdp.com
+
+[ req_ext ]
+subjectAltName                  = @alt_names
+
+[ alt_names ]
+DNS.1 = lgappstv.com
+DNS.2 = lge.com
+DNS.3 = lgsmartad.com
+DNS.4 = lgtvcommon.com
+DNS.5 = lgtviot.com
+DNS.6 = lgtvsdp.com
+DNS.6 = *.lgappstv.com
+DNS.7 = *.lge.com
+DNS.8 = *.lgsmartad.com
+DNS.9 = *.lgtvcommon.com
+DNS.10 = *.lgtviot.com
+DNS.11 = *.lgtvsdp.com
+DNS.12 = *.lgrecommends.lgappstv.com
+DNS.13 = *.cdpbeacon.lgtvcommon.com
+DNS.14 = *.cdpsvc.lgtvcommon.com
+DNS.15 = *.homeprv.lgtvcommon.com
+DNS.16 = *.rdl.lgtvcommon.com
+DNS.17 = *.recommend.lgtvcommon.com
+DNS.18 = *.service.lgtvcommon.com
+
+[ v3_ca ]
+# Extensions for a typical CA (`man x509v3_config`).
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+
+[ server_cert ]
+# Extensions for server certificates (`man x509v3_config`).
+basicConstraints = CA:FALSE
+nsCertType = server
+nsComment = "OpenSSL Generated Server Certificate"
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid,issuer:always
+keyUsage = critical, digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+

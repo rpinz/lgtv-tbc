@@ -1,0 +1,57 @@
+---
+version: '3.9'
+
+services:
+  dnsmasq-tbc:
+    build:
+      context: .
+      dockerfile: dnsmasq/Dockerfile
+    cap_add:
+      - NET_ADMIN
+    container_name: dnsmasq-tbc
+    hostname: dnsmasq-tbc
+    image: 'dnsmasq-tbc:alpine'
+    ports:
+      - target: 53
+        published: 53
+        protocol: udp
+        mode: host
+    restart: unless-stopped
+
+  nginx-tbc:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    container_name: nginx-tbc
+    depends_on:
+      - dnsmasq-tbc
+      - lgtv-tbc
+    hostname: nginx-tbc
+    image: 'nginx-tbc:alpine'
+    ports:
+      - target: 80
+        published: 80
+        protocol: tcp
+        mode: host
+      - target: 443
+        published: 443
+        protocol: tcp
+        mode: host
+    restart: unless-stopped
+
+  lgtv-tbc:
+    build:
+      context: .
+      dockerfile: lgtv-tbc/Dockerfile
+    container_name: lgtv-tbc
+    dns:
+      - 1.1.1.1
+      - 1.0.0.1
+    hostname: lgtv-tbc
+    image: 'lgtv-tbc:alpine'
+    ports:
+      - target: 8765
+        published: 8765
+        protocol: tcp
+        mode: host
+    restart: unless-stopped

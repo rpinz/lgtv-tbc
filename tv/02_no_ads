@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# source environment values
+NAMESERVER4="10.3.3.24"
+NAMESERVER6="2601:182:80:e752::3:4eb"
+MESSAGE="{\"sourceId\":\"webosbrew\",\"message\":\"<b>No ADS!</b><br/>Poisoning LG domains in /etc/hosts.\"}"
+
+# Ensure that no_ads script runs only once per boot
+once=/tmp/webosbrew_noads
+exec 200>"${once}.lock"
+
+if ! flock -x -n 200; then
+  echo "[!] No Ads script already running" >&2
+  exit 1
+fi
+
+trap "rm -f ${once}.lock" EXIT
+
+# Block ad servers
+if [[ -e /var/luna/preferences/webosbrew_no_ads ]]; then
+  echo >> /tmp/hosts
+  echo "# dynamically added on boot by 02_no_ads script" >> /tmp/hosts
+  echo "${NAMESERVER4} aic.cdpbeacon.lgtvcommon.com aic.cdpsvc.lgtvcommon.com aic.homeprv.lgtvcommon.com aic.lgtviot.com aic.rdl.lgtvcommon.com aic.recommend.lgtvcommon.com aic.service.lgtvcommon.com c5adm-developer-lge-com.aws-prd.net lg-sw-business-pmo.netlifyglobalcdn.com lgchhomeapp.lgtvcommon.com" >> /tmp/hosts
+  echo "${NAMESERVER6} aic.cdpbeacon.lgtvcommon.com aic.cdpsvc.lgtvcommon.com aic.homeprv.lgtvcommon.com aic.lgtviot.com aic.rdl.lgtvcommon.com aic.recommend.lgtvcommon.com aic.service.lgtvcommon.com c5adm-developer-lge-com.aws-prd.net lg-sw-business-pmo.netlifyglobalcdn.com lgchhomeapp.lgtvcommon.com" >> /tmp/hosts
+
+  echo >> /tmp/hosts
+  echo "# dynamically added on boot by 02_no_ads script" >> /tmp/hosts
+  echo "127.0.01 api.thetake.com discovery.meethue.com www.ueiwsp.com googleads.g.doubleclick.net mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
+  echo ":;1 api.thetake.com discovery.meethue.com www.ueiwsp.com googleads.g.doubleclick.net mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
+fi
+
+luna-send -a webosbrew -f -n 1 luna://com.webos.notification/createToast "${MESSAGE}"
+

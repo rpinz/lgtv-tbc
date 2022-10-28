@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# source environment values
+NAMESERVER4="10.3.3.24"
+NAMESERVER6="2601:182:80:e752::3:4eb"
+MESSAGE="{\"sourceId\":\"webosbrew\",\"message\":\"<b>DateTime</b><br/>Set current date/time.\"}"
+
+# Ensure that date script runs only once per boot
+once=/tmp/webosbrew_date
+exec 200>"${once}.lock"
+
+if ! flock -x -n 200; then
+  echo "[!] date script already running" >&2
+  exit 1
+fi
+
+trap "rm -f ${once}.lock" EXIT
+
+# set date/time
+if [[ -e /var/luna/preferences/webosbrew_date ]]; then
+  DATETIME="$(curl --head --insecure 'https://google.com/' 2>/dev/null | grep -i '^date:' | sed 's/^[Dd]ate: //g')"
+  DATETIME=$(date -d "$DATETIME" -D '%a, %d %b %Y %T %Z' +'%Y-%m-%d %H:%M:%S')
+  date -s "$DATETIME"
+fi
+
+luna-send -a webosbrew -f -n 1 luna://com.webos.notification/createToast "${MESSAGE}"
+

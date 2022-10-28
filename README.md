@@ -3,7 +3,21 @@
 A replacement HTTP server for LG webOS bootstrap mechanism that prevents unwanted forced updates, 
 disables bloatware and forbids phoning home with unique device IDs.
 
-## Setup
+## Docker Setup
+
+```
+docker compose build
+docker compose up -d
+```
+
+copy the contents of the tv directory to /var/lib/webosbrew/init.d
+
+```
+cp tv/* /var/lib/webosbrew/init.d
+```
+
+
+## Manual Setup
 
 You'll need one or multiple machines running: 
 
