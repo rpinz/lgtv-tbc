@@ -72,13 +72,16 @@ DNS.8 = *.lgsmartad.com
 DNS.9 = *.lgtvcommon.com
 DNS.10 = *.lgtviot.com
 DNS.11 = *.lgtvsdp.com
-DNS.12 = *.lgrecommends.lgappstv.com
-DNS.13 = *.cdpbeacon.lgtvcommon.com
-DNS.14 = *.cdpsvc.lgtvcommon.com
-DNS.15 = *.homeprv.lgtvcommon.com
-DNS.16 = *.rdl.lgtvcommon.com
-DNS.17 = *.recommend.lgtvcommon.com
-DNS.18 = *.service.lgtvcommon.com
+DNS.12 = *.ad.lgsmartad.com
+DNS.13 = *.info.lgsmartad.com
+DNS.14 = *.ibs.lgappstv.com
+DNS.15 = *.lgrecommends.lgappstv.com
+DNS.16 = *.cdpbeacon.lgtvcommon.com
+DNS.17 = *.cdpsvc.lgtvcommon.com
+DNS.18 = *.homeprv.lgtvcommon.com
+DNS.19 = *.rdl.lgtvcommon.com
+DNS.20 = *.recommend.lgtvcommon.com
+DNS.21 = *.service.lgtvcommon.com
 
 [ v3_ca ]
 # Extensions for a typical CA (`man x509v3_config`).
