@@ -33,5 +33,5 @@ if [[ -e /var/luna/preferences/webosbrew_date ]]; then
   lock /tmp/webosbrew_date
 
   datetime
-  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>DateTime</b><br/>Set current date/time.\"}"
+  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>LG TV Take Back Control</b><br/>Set current date/time.\"}"
 fi

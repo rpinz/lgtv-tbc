@@ -33,5 +33,5 @@ function poison {
 if [[ -e /var/luna/preferences/webosbrew_telemetry ]]; then
   lock /tmp/webosbrew_telemetry
   poison
-  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>Poisoned telemetry DNS</b><br/>Poisoned telemetry domains in /etc/hosts.\"}"
+  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>LG TV Take Back Control</b><br/>Poisoned telemetry domains in /etc/hosts.\"}"
 fi

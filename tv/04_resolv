@@ -53,5 +53,5 @@ if [[ -e /var/luna/preferences/webosbrew_resolv ]]; then
   lock /tmp/webosbrew_resolv
   overlay /var/lib/misc/resolv.conf
   resolv
-  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>DNS</b><br/>Poisoned resolv.conf\"}"
+  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>LG TV Take Back Control</b><br/>Poisoned resolv.conf\"}"
 fi

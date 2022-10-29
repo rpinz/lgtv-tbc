@@ -155,5 +155,5 @@ if [[ -e /var/luna/preferences/webosbrew_lgtv_tbc ]]; then
   c_rehash
   cp /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/trusted_cas.crt
 
-  toast "{\"sourceId\":\"webosbrew\",\"message\": \"<b>LG TV Take Back Control</b><br/>Poisoned LG SSL.\"}"
+  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>LG TV Take Back Control</b><br/>Poisoned SSL certificates added.\"}"
 fi
