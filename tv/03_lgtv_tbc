@@ -89,8 +89,9 @@ vaZ1+6gM7FnfOcHxtxXt7O+NEF+BEup4HjDdW8TemoLgASDzLA==
 EOF
   fi
 
-  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt > /etc/ssl/certs/trusted_ca56.pem
   echo "mozilla/LG_TV_TakeBackControl_Root.crt" >> /etc/ca-certificates.conf
+  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt > /etc/ssl/certs/trusted_ca56.pem
+  cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt >> /etc/ssl/certs/trusted_cas.crt
   cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt >> /usr/share/ca-certificates/sdp/sdp-ca.pem
 }
 
@@ -132,8 +133,9 @@ CRFjpLRB80UoNYcJVZ24tsaJeVq9i5B53LgEOM0KCGTNGA7df7atkE8W1rGK1Xpw
 EOF
   fi
 
-  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt > /etc/ssl/certs/trusted_ca57.pem
   echo "mozilla/LG_TV_TakeBackControl_Intermediate.crt" >> /etc/ca-certificates.conf
+  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt > /etc/ssl/certs/trusted_ca57.pem
+  cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt >> /etc/ssl/certs/trusted_cas.crt
   cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt >> /usr/share/ca-certificates/sdp/sdp-ca.pem
 }
 
@@ -153,7 +155,6 @@ if [[ -e /var/luna/preferences/webosbrew_lgtv_tbc ]]; then
 
   update-ca-certificates
   c_rehash
-  cp /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/trusted_cas.crt
 
   toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>LG TV Take Back Control</b><br/>Poisoned SSL certificates added.\"}"
 fi
