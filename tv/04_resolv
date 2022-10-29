@@ -3,25 +3,55 @@
 # source environment values
 NAMESERVER4="10.3.3.24"
 NAMESERVER6="2601:182:80:e752::3:4eb"
-MESSAGE="{\"sourceId\":\"webosbrew\",\"message\":\"<b>DNS</b><br/>Poisoned DNS.\"}"
+OVERLAY_BASE=/var/lib/webosbrew/ca
 
 # Ensure that resolv script runs only once per boot
-once=/tmp/webosbrew_resolv
-exec 200>"${once}.lock"
+function lock {
+  once=$1
+  exec 200>"${once}.lock"
 
-if ! flock -x -n 200; then
-  echo "[!] DNS script already running" >&2
-  exit 1
-fi
+  if ! flock -x -n 200; then
+    exit 1
+  fi
 
-trap "rm -f ${once}.lock" EXIT
+  trap "rm -f ${once}.lock" EXIT
+}
+
+function toast {
+  luna-send -a webosbrew -f -n 1 luna://com.webos.notification/createToast "$1"
+}
+
+function overlay {
+    set -e
+    overlay_id="$(echo $1 | sed 's;/;__;g')"
+    unset TARGET SOURCE FSTYPE OPTIONS
+    eval $(findmnt -P $1)
+    if [[ "$FSTYPE" == "overlay" ]] || [ -f "$1" ] && [[ "$FSTYPE" != "" ]]; then
+        echo "Overlay '$1' already mounted"
+    elif [ -f "$1" ]; then
+        if [ ! -f "$OVERLAY_BASE/$overlay_id" ]; then
+            cp $1 $OVERLAY_BASE/$overlay_id;
+        fi
+        mount --bind "$OVERLAY_BASE/$overlay_id" "$1"
+    else
+        mkdir -p "$OVERLAY_BASE/$overlay_id/upper" "$OVERLAY_BASE/$overlay_id/work"
+        mount -t overlay -o lowerdir=$1,upperdir=$OVERLAY_BASE/$overlay_id/upper/,workdir=$OVERLAY_BASE/$overlay_id/work/ overlay-$overlay_id $1
+    fi
+}
+
+function resolv {
+  if [[ -e /var/luna/preferences/webosbrew_resolv ]]; then
+    cat << EOF > /var/lib/misc/resolv.conf
+# dynamically added on boot by 04_resolv script
+nameserver ${NAMESERVER4}
+nameserver ${NAMESERVER6}
+EOF
+  fi
+}
 
 if [[ -e /var/luna/preferences/webosbrew_resolv ]]; then
-  echo "# dynamically added on boot by 04_resolv script" > /tmp/resolv.conf
-  echo "nameserver ${NAMESERVER4}" >> /tmp/resolv.conf
-  echo "nameserver ${NAMESERVER6}" >> /tmp/resolv.conf
-  mount --bind /tmp/resolv.conf /var/lib/misc/resolv.conf
+  lock /tmp/webosbrew_resolv
+  overlay /var/lib/misc/resolv.conf
+  resolv
+  toast "{\"sourceId\":\"webosbrew\",\"message\":\"<b>DNS</b><br/>Poisoned resolv.conf\"}"
 fi
-
-luna-send -a webosbrew -f -n 1 luna://com.webos.notification/createToast "${MESSAGE}"
-

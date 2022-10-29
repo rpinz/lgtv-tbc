@@ -3,27 +3,23 @@
 # source environment values
 NAMESERVER4="10.3.3.24"
 NAMESERVER6="2601:182:80:e752::3:4eb"
-MESSAGE="{\"sourceId\":\"webosbrew\",\"message\": \"<b>LG TV Take Back Control</b><br/>Poisoned LG SSL.\"}"
-
-# Ensure that lgtv-tbc script runs only once per boot
-once=/tmp/webosbrew_lgtv_tbc
-exec 200>"${once}.lock"
-
-if ! flock -x -n 200; then
-  echo "[!] LG TV take back control script already running" >&2
-  exit 1
-fi
-
-trap "rm -f ${once}.lock" EXIT
-
-#cp /usr/share/ca-certificates/sdp/sdp-ca.pem /tmp/sdp-ca.pem
-#cat << EOF >> /tmp/sdp-ca.pem
-#cat << EOF >> /tmp/sdp-ca.pem
-#mount --bind /tmp/sdp-ca.pem /usr/share/ca-certificates/sdp/sdp-ca.pem
-
-
-# Directory to store overlays in (one directory structure is created per overlay configured down below)
 OVERLAY_BASE=/var/lib/webosbrew/ca
+
+# Ensure that lgtv_tbc script runs only once per boot
+function lock {
+  once=$1
+  exec 200>"${once}.lock"
+
+  if ! flock -x -n 200; then
+    exit 1
+  fi
+
+  trap "rm -f ${once}.lock" EXIT
+}
+
+function toast {
+  luna-send -a webosbrew -f -n 1 luna://com.webos.notification/createToast "$1"
+}
 
 function overlay {
     set -e
@@ -55,11 +51,7 @@ function c_rehash {
   )
 }
 
-if [[ -e /var/luna/preferences/webosbrew_lgtv_tbc ]]; then
-  overlay /etc/ssl/certs
-  overlay /usr/share/ca-certificates
-  overlay /etc/ca-certificates.conf
-
+function root {
   if [ ! -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt" ]; then
     cat << EOF > /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt
 # LG_TV_TakeBackControl_Root.crt
@@ -97,10 +89,14 @@ vaZ1+6gM7FnfOcHxtxXt7O+NEF+BEup4HjDdW8TemoLgASDzLA==
 EOF
   fi
 
-  if [ ! -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt" -a ! -e "/etc/ssl/certs/LG_TV_TakeBackControl_Root.crt" ]; then
+  if [ -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt" -a ! -e "/etc/ssl/certs/LG_TV_TakeBackControl_Root.crt" ]; then
     ln -sf /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt /etc/ssl/certs/LG_TV_TakeBackControl_Root.crt
   fi
 
+  echo "mozilla/LG_TV_TakeBackControl_Root.crt" >> /etc/ca-certificates.conf
+}
+
+function intermediate {
   if [ ! -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt" ]; then
     cat << EOF > /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt
 # LG_TV_TakeBackControl_Intermediate.crt
@@ -138,17 +134,30 @@ CRFjpLRB80UoNYcJVZ24tsaJeVq9i5B53LgEOM0KCGTNGA7df7atkE8W1rGK1Xpw
 EOF
   fi
 
-  if [ ! -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt" -a ! -e "/etc/ssl/certs/LG_TV_TakeBackControl_Intermediate.crt" ]; then
+  if [ -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt" -a ! -e "/etc/ssl/certs/LG_TV_TakeBackControl_Intermediate.crt" ]; then
     ln -sf /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt /etc/ssl/certs/LG_TV_TakeBackControl_Intermediate.crt
   fi
 
-  echo "mozilla/LG_TV_TakeBackControl_Root.crt" >> /etc/ca-certificates.conf
   echo "mozilla/LG_TV_TakeBackControl_Intermediate.crt" >> /etc/ca-certificates.conf
+}
+
+#cp /usr/share/ca-certificates/sdp/sdp-ca.pem /tmp/sdp-ca.pem
+#cat << EOF >> /tmp/sdp-ca.pem
+#cat << EOF >> /tmp/sdp-ca.pem
+#mount --bind /tmp/sdp-ca.pem /usr/share/ca-certificates/sdp/sdp-ca.pem
+
+if [[ -e /var/luna/preferences/webosbrew_lgtv_tbc ]]; then
+  lock /tmp/webosbrew_lgtv_tbc
+  overlay /etc/ssl/certs
+  overlay /usr/share/ca-certificates
+  overlay /etc/ca-certificates.conf
+
+  root
+  intermediate
 
   update-ca-certificates
   c_rehash
   cp /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/trusted_cas.crt
+
+  toast "{\"sourceId\":\"webosbrew\",\"message\": \"<b>LG TV Take Back Control</b><br/>Poisoned LG SSL.\"}"
 fi
-
-luna-send -a webosbrew -f -n 1 luna://com.webos.notification/createToast "${MESSAGE}"
-
