@@ -89,10 +89,6 @@ vaZ1+6gM7FnfOcHxtxXt7O+NEF+BEup4HjDdW8TemoLgASDzLA==
 EOF
   fi
 
-  if [ -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt" -a ! -e "/etc/ssl/certs/LG_TV_TakeBackControl_Root.crt" ]; then
-    ln -sf /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt /etc/ssl/certs/LG_TV_TakeBackControl_Root.crt
-  fi
-
   echo "mozilla/LG_TV_TakeBackControl_Root.crt" >> /etc/ca-certificates.conf
 }
 
@@ -132,10 +128,6 @@ CRFjpLRB80UoNYcJVZ24tsaJeVq9i5B53LgEOM0KCGTNGA7df7atkE8W1rGK1Xpw
 6dHv9YbuDqSGA4TduX73r3AR6hrE5TY2jdHkUdyjX7pm7xw76odUyh9wze8i
 -----END CERTIFICATE-----
 EOF
-  fi
-
-  if [ -f "/usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt" -a ! -e "/etc/ssl/certs/LG_TV_TakeBackControl_Intermediate.crt" ]; then
-    ln -sf /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt /etc/ssl/certs/LG_TV_TakeBackControl_Intermediate.crt
   fi
 
   echo "mozilla/LG_TV_TakeBackControl_Intermediate.crt" >> /etc/ca-certificates.conf
