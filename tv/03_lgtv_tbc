@@ -89,6 +89,7 @@ vaZ1+6gM7FnfOcHxtxXt7O+NEF+BEup4HjDdW8TemoLgASDzLA==
 EOF
   fi
 
+  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt > /etc/ssl/certs/trusted_ca56.pem
   echo "mozilla/LG_TV_TakeBackControl_Root.crt" >> /etc/ca-certificates.conf
 }
 
@@ -130,6 +131,7 @@ CRFjpLRB80UoNYcJVZ24tsaJeVq9i5B53LgEOM0KCGTNGA7df7atkE8W1rGK1Xpw
 EOF
   fi
 
+  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt > /etc/ssl/certs/trusted_ca57.pem
   echo "mozilla/LG_TV_TakeBackControl_Intermediate.crt" >> /etc/ca-certificates.conf
 }
 
