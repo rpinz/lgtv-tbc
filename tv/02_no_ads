@@ -20,11 +20,6 @@ trap "rm -f ${once}.lock" EXIT
 if [[ -e /var/luna/preferences/webosbrew_no_ads ]]; then
   echo >> /tmp/hosts
   echo "# dynamically added on boot by 02_no_ads script" >> /tmp/hosts
-  echo "${NAMESERVER4} aic.cdpbeacon.lgtvcommon.com aic.cdpsvc.lgtvcommon.com aic.homeprv.lgtvcommon.com aic.lgtviot.com aic.rdl.lgtvcommon.com aic.recommend.lgtvcommon.com aic.service.lgtvcommon.com c5adm-developer-lge-com.aws-prd.net lg-sw-business-pmo.netlifyglobalcdn.com lgchhomeapp.lgtvcommon.com" >> /tmp/hosts
-  echo "${NAMESERVER6} aic.cdpbeacon.lgtvcommon.com aic.cdpsvc.lgtvcommon.com aic.homeprv.lgtvcommon.com aic.lgtviot.com aic.rdl.lgtvcommon.com aic.recommend.lgtvcommon.com aic.service.lgtvcommon.com c5adm-developer-lge-com.aws-prd.net lg-sw-business-pmo.netlifyglobalcdn.com lgchhomeapp.lgtvcommon.com" >> /tmp/hosts
-
-  echo >> /tmp/hosts
-  echo "# dynamically added on boot by 02_no_ads script" >> /tmp/hosts
   echo "127.0.01 api.thetake.com discovery.meethue.com www.ueiwsp.com googleads.g.doubleclick.net mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
   echo ":;1 api.thetake.com discovery.meethue.com www.ueiwsp.com googleads.g.doubleclick.net mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
 fi
