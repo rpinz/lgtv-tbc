@@ -73,12 +73,12 @@ root_ca_key() {
 root_ca_cert() {
   echo "🔒 Generating CA X509 certificate"
   openssl req \
-    -subj "/C=US/O=lgtv-tbc/CN=lgtv-tbc root CA" \
     -config "${ROOT_CA_CONFIG}" \
-    -key "${ROOT_CA_KEY}" \
     -new \
     -x509 \
     -sha256 \
+    -subj "/C=US/O=lgtv-tbc/CN=lgtv-tbc root CA" \
+    -key "${ROOT_CA_KEY}" \
     -days "${ROOT_CA_DAYS}" \
     -extensions "${ROOT_CA_EXTENSIONS}" \
     -out "${ROOT_CA_CERT}"
@@ -115,11 +115,11 @@ int_ca_key() {
 int_ca_csr() {
   echo "🔒 Generating intermediate CA certificate signing request"
   openssl req \
-    -subj "/C=US/O=lgtv-tbc/CN=lgtv-tbc intermediate CA" \
     -config "${INT_CA_CONFIG}" \
-    -key "${INT_CA_KEY}" \
     -new \
     -sha256 \
+    -subj "/C=US/O=lgtv-tbc/CN=lgtv-tbc intermediate CA" \
+    -key "${INT_CA_KEY}" \
     -out "${INT_CA_CSR}"
   chmod 444 "${INT_CA_CSR}"
 }
@@ -128,9 +128,9 @@ int_ca_cert() {
   echo "🔒 Generating intermediate CA certificate"
   openssl ca \
     -config "${ROOT_CA_CONFIG}" \
-    -in "${INT_CA_CSR}" \
     -notext \
     -md sha256 \
+    -in "${INT_CA_CSR}" \
     -days "${INT_CA_DAYS}" \
     -extensions "${INT_CA_EXTENSIONS}" \
     -out "${INT_CA_CERT}"
@@ -182,25 +182,25 @@ lgtv_tbc_key() {
 lgtv_tbc_csr() {
   echo "🔒 Generating lgtv_tbc X509 certificate signing request"
   openssl req \
+    -config "${LGTV_TBC_CONFIG}"
     -new \
     -nodes \
+    -subj "/CN=lgtvsdp.com" \
     -key "${LGTV_TBC_KEY}" \
     -out "${LGTV_TBC_CSR}" \
-    -subj "/CN=lgtvsdp.com" \
-    -config "${LGTV_TBC_CONFIG}"
   chmod 444 "${LGTV_TBC_CSR}"
 }
 
 lgtv_tbc_cert() {
   echo "🔒 Generating lgtv_tbc X509 certificate"
   openssl ca \
-    -in "${LGTV_TBC_CSR}" \
+    -config "${LGTV_TBC_CONFIG}"
     -notext \
     -md sha256 \
+    -in "${LGTV_TBC_CSR}" \
     -days "${LGTV_TBC_DAYS}" \
     -extensions "${LGTV_TBC_EXTENSIONS}" \
     -out "${LGTV_TBC_CERT}" \
-    -config "${LGTV_TBC_CONFIG}"
   chmod 444 "${LGTV_TBC_CERT}"
 }
 
