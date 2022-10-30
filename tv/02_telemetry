@@ -25,8 +25,8 @@ function poison {
   if [[ -e /var/luna/preferences/webosbrew_telemetry ]]; then
     echo >> /tmp/hosts
     echo "# dynamically added on boot by 02_telemetry script" >> /tmp/hosts
-    echo "127.0.01 api.thetake.com discovery.meethue.com www.ueiwsp.com mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
-    echo "::1 api.thetake.com discovery.meethue.com www.ueiwsp.com mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
+    echo "127.0.01 api.thetake.com api.thetake.com.cdn.cloudflare.net discovery.meethue.com www.ueiwsp.com mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
+    echo "::1 api.thetake.com api.thetake.com.cdn.cloudflare.net discovery.meethue.com www.ueiwsp.com mediaservices.cdn-apple.com ocsp.apple.com" >> /tmp/hosts
   fi
 }
 

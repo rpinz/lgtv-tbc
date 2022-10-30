@@ -57,9 +57,9 @@ function root {
   fi
 
   echo "mozilla/LG_TV_TakeBackControl_Root.crt" >> /etc/ca-certificates.conf
-  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt > /etc/ssl/certs/trusted_ca56.pem
-  cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt >> /etc/ssl/certs/trusted_cas.crt
-  cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt >> /usr/share/ca-certificates/sdp/sdp-ca.pem
+  openssl x509 -in /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Root.crt -out /etc/ssl/certs/trusted_ca56.pem
+  cat /etc/ssl/certs/trusted_ca56.pem >> /etc/ssl/certs/trusted_cas.crt
+  cat /etc/ssl/certs/trusted_ca56.pem >> /usr/share/ca-certificates/sdp/sdp-ca.pem
 }
 
 function intermediate {
@@ -68,9 +68,9 @@ function intermediate {
   fi
 
   echo "mozilla/LG_TV_TakeBackControl_Intermediate.crt" >> /etc/ca-certificates.conf
-  sed -e '/^#/d' /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt > /etc/ssl/certs/trusted_ca57.pem
-  cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt >> /etc/ssl/certs/trusted_cas.crt
-  cat /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt >> /usr/share/ca-certificates/sdp/sdp-ca.pem
+  openssl x509 -in /usr/share/ca-certificates/mozilla/LG_TV_TakeBackControl_Intermediate.crt -out /etc/ssl/certs/trusted_ca57.pem
+  cat /etc/ssl/certs/trusted_ca57.pem >> /etc/ssl/certs/trusted_cas.crt
+  cat /etc/ssl/certs/trusted_ca57.pem >> /usr/share/ca-certificates/sdp/sdp-ca.pem
 }
 
 #cp /usr/share/ca-certificates/sdp/sdp-ca.pem /tmp/sdp-ca.pem
