@@ -139,7 +139,7 @@ func generateAuthentication() *SdpAuthentication {
 					PromotionCount: 0,
 				},
 				ServerDomain: ServerDomain{
-					URL:     "http://ngfts.lge.com/domainurl/webOS4.0/v1.0/server_domain_list_v4.0.json",
+					URL:     "http://ngfts.lge.com/domainurl/webOS6.0/v1.0/server_domain_list_v6.0.json",
 					Version: "1.0",
 				},
 			},
